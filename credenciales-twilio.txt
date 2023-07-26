@@ -1,8 +1,0 @@
-## CREDENCIALES TWILIO
-businessintelligentsr@gmail.com
-BUSINESSINTELLIGENT2022
-
-
-## CREDENCIALES HEROKU
-matias.navarro@gsolutions.com.ar
-BUSINESSINTELLIGENT2022!

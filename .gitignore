@@ -160,4 +160,7 @@ cython_debug/
 #.idea/
 
 *.exe
-*.txt
+conversations/
+conversations_interesed/
+division_de_clientes/
+division de clientes/
