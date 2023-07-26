@@ -1,0 +1,10 @@
+andres: me interesa
+andres: ir a productos
+andres: aislantes termicos
+andres: volver
+andres: paneles solares
+andres: ir con asistente
+andres: hola
+andres: ir con asistente
+andres: mendoza
+andres: cordoba
