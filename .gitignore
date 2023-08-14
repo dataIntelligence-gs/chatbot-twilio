@@ -1,3 +1,7 @@
+conversations_interesed/*
+
+offline.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
