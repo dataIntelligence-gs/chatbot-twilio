@@ -22,7 +22,7 @@ def create_records_from_file(file_path):
         lines = file.readlines()
 
     for line in lines:
-        phone_number = line.strip()  # Elimina saltos de línea y espacios
+        phone_number = line.strip()
         create_record(phone_number)
 
 def create_record(phone_number):
@@ -38,7 +38,7 @@ def create_record(phone_number):
     except Exception as e:
         print(f'Error en create_record - Detalles: {e}')
 
-# Función para actualizar el campo 'initial_message_received'
+# Función para actualizar el campo 'initial_message'
 def update_initial_message_received(phone_number, initial_message):
     try:
         conn = sqlite3.connect('chatbot_database.db')
@@ -83,9 +83,43 @@ def update_usage_interest(phone_number, usage):
     except Exception as e:
         print(f'Error en update_usage_interest - Detalles: {e}')
 
+def get_all_records():
+    try:
+        conn = sqlite3.connect('chatbot_database.db')
+        query = 'SELECT * FROM interactions'
+        result = conn.execute(query).fetchall()
+        conn.close()
+        return result
+    except Exception as e:
+        print(f'Error en get_all_records - Detalles: {e}')
+
+def filter_by_value_and_column(value, column):
+    try:
+        conn = sqlite3.connect('chatbot_database.db')
+        query = f'SELECT * FROM interactions WHERE {column} = ?'
+        result = conn.execute(query, (value,)).fetchall()
+        conn.close()
+        return result
+    except Exception as e:
+        print(f'Error en filter_by_value_and_column - Detalles: {e}')
+
+def get_number_of_records():
+    conn = sqlite3.connect('chatbot_database.db')
+    query = 'SELECT COUNT(*) FROM interactions'
+    result = conn.execute(query).fetchone()[0]
+    conn.close()
+    return result
+
+def get_number_of_records_by_filter(value, column):
+    records = filter_by_value_and_column(value, column)
+    return len(records)
+
+
 if __name__ == '__main__':
-    create_db()
-    create_records_from_file('clients.txt')
-    update_initial_message_received('2942693075', 'si, me encantaria')
-    update_location_selection('2942693075', 'mendoza')
-    update_usage_interest('2942693075', 'turistico')
+    #create_db()
+    #create_records_from_file('clients.txt')
+    # update_initial_message_received('2942402652', 'si, me encantaria')
+    # update_location_selection('2942402652', 'me interesan ambos')
+    # update_usage_interest('2942402652', 'residencial')
+    print(get_number_of_records())
+    print(get_number_of_records_by_filter('si, me encantaria', 'initial_message'))
