@@ -1,3 +1,4 @@
+from database_module import create_records_from_file, update_initial_message_received, update_location_selection, update_usage_interest
 from twilio.base.exceptions import TwilioRestException
 from flask import Flask, request
 from twilio.rest import Client
@@ -36,6 +37,7 @@ def bot():
         pool_sales_general = ['2942693075']
         
         if incoming_msg == 'en otro momento':
+            update_initial_message_received(str(number), str(incoming_msg))
             account_sid = 'ACce7b9301a1718047284a251f66781145'
             auth_token = '9eea91c9d052bfbc81cc3a1a672186ae'
             client = Client(account_sid, auth_token)
@@ -47,6 +49,7 @@ def bot():
             time.sleep(random.randint(10, 15))
 
         elif incoming_msg == "si, me encantaria":
+            update_initial_message_received(str(number), str(incoming_msg))
             account_sid = 'ACce7b9301a1718047284a251f66781145'
             auth_token = '9eea91c9d052bfbc81cc3a1a672186ae'
             client = Client(account_sid, auth_token)
@@ -57,6 +60,7 @@ def bot():
             )
 
         elif incoming_msg == "córdoba" or incoming_msg == "mendoza" or incoming_msg == "me interesan ambos":
+            update_location_selection(str(number), str(incoming_msg))
             account_sid = 'ACce7b9301a1718047284a251f66781145'
             auth_token = '9eea91c9d052bfbc81cc3a1a672186ae'
             client = Client(account_sid, auth_token)
@@ -68,6 +72,7 @@ def bot():
             eleccion = incoming_msg
         
         elif incoming_msg == "uso turístico" or incoming_msg == "uso residencial" or incoming_msg == "inversión":
+            update_usage_interest(str(number), str(incoming_msg))
             account_sid = 'ACce7b9301a1718047284a251f66781145'
             auth_token = '9eea91c9d052bfbc81cc3a1a672186ae'
             client = Client(account_sid, auth_token)
@@ -160,6 +165,7 @@ def bot():
 
 @app.route('/send/campaign1', methods=['POST'])
 def send():
+    create_records_from_file('clients_1.txt')
     with open("clients_1.txt", "r") as f:
         number_list = f.readlines()
 
