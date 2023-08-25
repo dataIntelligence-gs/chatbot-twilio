@@ -7,22 +7,25 @@ import pandas as pd
 import folium
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from informe.constantes import *
+from informe.constantes import Constants
 
 
 def arbol():
     st.image("informe/imagenes/price.png", caption='Precio de 1000 aperturas y 1000 mensajes', use_column_width=True)
     st.image("informe/imagenes/mensaje.png", caption='Mensaje utilizado para campaña', use_column_width=True)
 
+
+    tupla = Constants().main()
+    print(tupla[0])
     # Crear los nodos del árbol
     root = Node("Arbol")
-    mensajes_node = Node(f"Mensajes {cantidad_mensajes}", parent=root)
-    responde_node = Node(f"Responde {responde}", parent=mensajes_node)
-    si_node = Node(f"Si, me encantaría {si}", parent=responde_node)
-    si_porcentaje_node = Node(f"Porcentaje de derivación {porcentaje_si}", parent=si_node)
-    no_porcentaje_node = Node(f"Porcentaje de no derivación {porcentaje_no}", parent=si_node)
-    no_en_otro_momento_node = Node(f"No en otro momento {no_en_otro_momento}", parent=responde_node)
-    no_responde_node = Node(f"No responde {no}", parent=mensajes_node)
+    mensajes_node = Node(f"Mensajes {tupla[0]}", parent=root)
+    responde_node = Node(f"Responde {tupla[1]}", parent=mensajes_node)
+    si_node = Node(f"Si, me encantaría {tupla[2]}", parent=responde_node)
+    si_porcentaje_node = Node(f"Porcentaje de derivación {tupla[7]}", parent=si_node)
+    no_porcentaje_node = Node(f"Porcentaje de no derivación {tupla[8]}", parent=si_node)
+    no_en_otro_momento_node = Node(f"No en otro momento {tupla[5]}", parent=responde_node)
+    no_responde_node = Node(f"No responde {tupla[6]}", parent=mensajes_node)
 
 
     # Crear un objeto Digraph
@@ -38,7 +41,7 @@ def arbol():
 
     # Guarda en un archivo temporal
     graph_filename = "temp_graph"
-    dot.render(graph_filename, cleanup=True)
+    dot.render("informe/imagenes/" + graph_filename, cleanup=True)
 
     # Crear la interfaz de streamlit
     st.title("Arbol de Mensajes")

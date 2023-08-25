@@ -38,9 +38,10 @@ def mapa():
 
     phone_numbers = []
     # Lista de números de teléfono para verificar
-    with open("informe/lineas.txt", "r") as f:
-        for line in f:
-            phone_numbers.append(line.strip())
+    df = pd.read_sql_query("SELECT * FROM interactions", r"sqlite:///C:\Users\Usuario\Desktop\chatbot-twilio\chatbot_database.db")
+    for i in range(len(df['phone_number'])):
+        phone_numbers.append(df['phone_number'][i])
+    
 
     # Crear un DataFrame para los números de teléfono y las provincias
     data = {'Phone_Number': phone_numbers}
