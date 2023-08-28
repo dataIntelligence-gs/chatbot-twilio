@@ -1,3 +1,4 @@
+import subprocess
 from database_module import create_records_from_file, update_initial_message_received, update_location_selection, update_usage_interest
 from twilio.base.exceptions import TwilioRestException
 from flask import Flask, request
@@ -8,6 +9,10 @@ import datetime as dt
 import os
 import time
 import random
+from front import *
+import datetime as dt
+from apscheduler.schedulers.background import BackgroundScheduler
+import streamlit as st
 
 
 load_dotenv()
@@ -20,6 +25,17 @@ auth_token = os.environ['TWILIO_AUTH_TOKEN']
 client = Client()
 pool_number = ['3518725311', '3518725310', '3518725309', '1178983221', '1178981923']
 eleccion = None
+
+def actualizar_informe():
+
+    subprocess.Popen(['streamlit', 'run', 'front.py'])
+  
+    hora = dt.datetime.now()
+    print(f'Informe Actualizado a las {hora.hour}:{hora.minute}')
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(actualizar_informe, 'cron', hour=9, minute=39)  # Cambia la hora a la que deseas que se ejecute
+scheduler.start()
 
 @app.route('/bot', methods=['POST'])
 def bot():
@@ -199,6 +215,14 @@ def send():
             continue
         
     return str('Done')
+
+# @app.route('/informe', methods=['POST'])
+# def informe():
+#     main()
+#     hora = dt.datetime.now()
+#     return str(f'Informe Actualizado a las {hora.hour}:{hora.minute}')
+    
+
 
 if __name__ == '__main__':
     from waitress import serve
