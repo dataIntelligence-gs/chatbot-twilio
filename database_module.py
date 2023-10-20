@@ -112,14 +112,15 @@ def get_number_of_records():
 
 def get_number_of_records_by_filter(value, column):
     records = filter_by_value_and_column(value, column)
-    return len(records)
+    print(f'records: {records}')
+    return records
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     #create_db()
     #create_records_from_file('clients.txt')
     # update_initial_message_received('2942402652', 'si, me encantaria')
     # update_location_selection('2942402652', 'me interesan ambos')
     # update_usage_interest('2942402652', 'residencial')
-    print(get_number_of_records())
-    print(get_number_of_records_by_filter('si, me encantaria', 'initial_message'))
+    # print(get_number_of_records())
+    # print(get_number_of_records_by_filter('si, me encantaria', 'initial_message'))

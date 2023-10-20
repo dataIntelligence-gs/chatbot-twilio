@@ -1,7 +1,7 @@
 import subprocess
-from database_module import create_records_from_file, update_initial_message_received, update_location_selection, update_usage_interest
+from database_module import create_records_from_file, update_initial_message_received, update_location_selection, update_usage_interest, get_all_records, get_number_of_records_by_filter
 from twilio.base.exceptions import TwilioRestException
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from twilio.rest import Client
 from dotenv import load_dotenv
 from waitress import serve
@@ -23,13 +23,13 @@ account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
 
 client = Client()
-pool_number = ['3518725311', '3518725310', '3518725309', '1178983221', '1178981923']
+pool_number = ['2604516691', '2604417534', '2604417531', '2604417524', '2604417522']
 eleccion = None
 
 def actualizar_informe():
 
     subprocess.Popen(['streamlit', 'run', 'front.py'])
-  
+
     hora = dt.datetime.now()
     print(f'Informe Actualizado a las {hora.hour}:{hora.minute}')
 
@@ -185,8 +185,8 @@ def send():
     with open("clients_1.txt", "r") as f:
         number_list = f.readlines()
 
-    account_sid = 'ACce7b9301a1718047284a251f66781145'
-    auth_token = '9eea91c9d052bfbc81cc3a1a672186ae'
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
 
     for number in number_list:
@@ -195,7 +195,7 @@ def send():
             a = random.choice(pool_number)
             message = client.messages.create(
                                 from_='whatsapp:+549'+a,
-                                body="Hola! 👋 ¿Cómo estás? \n\nMi nombre es Lautaro 👦🏻, Asesor comercial de Evi Desarrollos, empresa líder en el mercado inmobiliario dedicada a hacer realidad el sueño de tener tu propio lote. \n\n¿Querés conocernos un poco más?",
+                                body="Hola me comunico desde Evi Desarrollos para informarles los precios de nuestros lotes",
                                 to='whatsapp:+54'+number,
             )
             time.sleep(random.randint(10, 15))
@@ -203,11 +203,11 @@ def send():
             print(message.sid)
         
         except TwilioRestException as twilio_error:
-            if twilio_error.status == 404 and 'No valid template found' in e.msg:
-                print(f'Plantilla de saludo de bot dada de baja - detalles:{e}')
+            if twilio_error.status == 404 and 'No valid template found' in twilio_error.msg:
+                print(f'Plantilla de saludo de bot dada de baja - detalles: {twilio_error}')
                 continue
             else:
-                print(f'Error al momento de enviar mensaje - Detalles: TwilioRestException - {e}')
+                print(f'Error al momento de enviar mensaje - Detalles: TwilioRestException - {twilio_error}')
                 continue
 
         except Exception as e:
@@ -216,13 +216,20 @@ def send():
         
     return str('Done')
 
-# @app.route('/informe', methods=['POST'])
-# def informe():
-#     main()
-#     hora = dt.datetime.now()
-#     return str(f'Informe Actualizado a las {hora.hour}:{hora.minute}')
-    
+@app.route('/get-all-data', methods=['GET'])
+def get_all_data():
+    return jsonify(get_all_records())
 
+@app.route('/get-filter-data', methods=['GET'])
+def get_filter_data():
+    value = request.json.get('value')
+    column = request.json.get('column')
+
+    if value == None or column == None:
+        return jsonify({'error': 'Missing value or column'})
+    
+    return jsonify(get_number_of_records_by_filter(value, column))
+    
 
 if __name__ == '__main__':
     from waitress import serve
