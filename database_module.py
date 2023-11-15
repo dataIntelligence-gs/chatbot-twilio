@@ -103,6 +103,16 @@ def filter_by_value_and_column(value, column):
     except Exception as e:
         print(f'Error en filter_by_value_and_column - Detalles: {e}')
 
+def filter_by_column(column):
+    try:
+        conn = sqlite3.connect('chatbot_database.db')
+        query = f'SELECT COUNT({column}) FROM interactions WHERE {column} IS NOT NULL'
+        result = conn.execute(query).fetchall()
+        conn.close()
+        return result
+    except Exception as e:
+        print(f'Error en filter_by_value_and_column - Detalles: {e}')
+
 def get_number_of_records():
     conn = sqlite3.connect('chatbot_database.db')
     query = 'SELECT COUNT(*) FROM interactions'
@@ -114,13 +124,3 @@ def get_number_of_records_by_filter(value, column):
     records = filter_by_value_and_column(value, column)
     print(f'records: {records}')
     return records
-
-
-# if __name__ == '__main__':
-    #create_db()
-    #create_records_from_file('clients.txt')
-    # update_initial_message_received('2942402652', 'si, me encantaria')
-    # update_location_selection('2942402652', 'me interesan ambos')
-    # update_usage_interest('2942402652', 'residencial')
-    # print(get_number_of_records())
-    # print(get_number_of_records_by_filter('si, me encantaria', 'initial_message'))
